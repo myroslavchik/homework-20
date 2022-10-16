@@ -1,5 +1,5 @@
 body {
-  background-color: aliceblue;
+  background-color: rgb(234, 240, 229);
 }
 
 .container {
@@ -21,13 +21,17 @@ textarea {
     padding: 25px;
 }
 
-#numbers {
+button {
   cursor: pointer;
+  width: 90px;
+  height: 30px;
+  background-color: #83ff7f;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #000;
+  font-size: medium;
 }
 
-#languages {
-  cursor: pointer;
-}
 
 table {
     font-family: arial, sans-serif;

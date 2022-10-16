@@ -9,17 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const TEXT = document.querySelector('.text');
     const TEXT_AREA = document.createElement("textarea");
+    const HOME = document.querySelector('.home-1');
     
     document.addEventListener('keydown', function(event) {
     if (event.code == 'KeyE' && event.ctrlKey) {
         event.preventDefault()
         TEXT_AREA.innerHTML = TEXT.textContent;
-        TEXT.appendChild(TEXT_AREA);
+        TEXT.remove();
+        HOME.appendChild(TEXT_AREA);
+        
+        
     }
     if (event.code == 'KeyS' && event.ctrlKey) {
         event.preventDefault()
+        HOME.appendChild(TEXT)
         TEXT.innerHTML = TEXT_AREA.value;
-        TEXT.style.display = "block";
+        TEXT_AREA.remove();
     }
     });
 
@@ -29,15 +34,61 @@ document.addEventListener('DOMContentLoaded', () => {
     // що числові значення повинні сортуватися як числа,
     // а не як рядки.
 
-    const NUMBERS = document.getElementById("numbers").addEventListener('click', sortArray);
-    const LANGUAGES = document.getElementById("languages").addEventListener('click', sortTextArray);
-    function sortArray () {
-        let table = document.getElementById("table");
-        let numberTR = table.rows;
-    Array.from(numberTR)
-         .sort((a, b) => a.cells[0].textContent - b.cells[0].textContent)
-         .forEach(tr => table.appendChild(tr));
-    }
+        const TABLE = document.getElementById('sortMe');
+        const HEADERS = TABLE.querySelectorAll('th');
+        const TABLEBODY = TABLE.querySelector('tbody');
+        const ROWS = TABLEBODY.querySelectorAll('tr');
+        const DIRECTIONS = Array.from(HEADERS).map(function (header) {
+            return '';
+        });
+
+        const transform = function (index, content) {
+        const type = HEADERS[index].getAttribute('data-type');
+            switch (type) {
+                case 'number':
+                    return parseFloat(content);
+                case 'string':
+                default:
+                    return content;
+            }
+        };
+
+        const SORTCOLUMN = function (index) {
+        const DIRECTION = DIRECTIONS[index] || 'asc';
+        const MULTIPLIER = DIRECTION === 'asc' ? 1 : -1;
+        const NEWROWS = Array.from(ROWS);
+
+            NEWROWS.sort(function (rowA, rowB) {
+                const CELLA = rowA.querySelectorAll('td')[index].innerHTML;
+                const CELLB = rowB.querySelectorAll('td')[index].innerHTML;
+                const a = transform(index, CELLA);
+                const b = transform(index, CELLB);
+                switch (true) {
+                    case a > b:
+                        return 1 * MULTIPLIER;
+                    case a < b:
+                        return -1 * MULTIPLIER;
+                    case a === b:
+                        return 0;
+                }
+            });
+
+            [].forEach.call(ROWS, function (row) {
+                TABLEBODY.removeChild(row);
+            });
+
+            DIRECTIONS[index] = DIRECTION === 'asc' ? 'desc' : 'asc';
+
+            NEWROWS.forEach(function (newRow) {
+                TABLEBODY.appendChild(newRow);
+            });
+        };
+
+        [].forEach.call(HEADERS, function (header, index) {
+            header.addEventListener('click', function () {
+                SORTCOLUMN(index);
+            });
+        });
 
     // Створити HTML-сторінку з блоком тексту в рамці.
     // Реалізувати можливість змінювати розмір блоку,
@@ -58,7 +109,5 @@ document.addEventListener('DOMContentLoaded', () => {
         window.removeEventListener('mousemove', Resize, false);
         window.removeEventListener('mouseup', stopResize, false);
     }
-
-
 
 });
