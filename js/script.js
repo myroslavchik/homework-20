@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let element = document.getElementById('myBox');
     element.addEventListener('mousedown', startResize, false);
+
     function startResize(e) {
         window.addEventListener('mousemove', Resize, false);
         window.addEventListener('mouseup', stopResize, false);
@@ -104,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
      function Resize(e) {
         element.style.width = (e.clientX - element.offsetLeft) + 'px';
         element.style.height = (e.clientY - element.offsetTop) + 'px';
+
      }
      function stopResize(e) {
         window.removeEventListener('mousemove', Resize, false);
